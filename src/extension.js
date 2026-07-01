@@ -1,6 +1,6 @@
 /** @import { StdInterface } from './types/dbus.js' */
 /** @import { KeysOf } from './types/misc.js' */
-/** @import { MouseActions, PanelElements, LabelTypes } from './types/enums/common.js' */
+/** @import { MouseActions, PanelElements, LabelTypes } from './enums/common.js' */
 
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
@@ -23,7 +23,7 @@ import {
     DBUS_OBJECT_PATH,
     DBUS_IFACE_NAME,
     ExtensionPositions,
-} from "./types/enums/common.js";
+} from "./enums/common.js";
 
 /** @typedef {KeysOf<typeof PanelElements>[]} ElementsOrder */
 /** @typedef {(KeysOf<typeof LabelTypes> | (string & NonNullable<unknown>))[]} LabelsOrder */

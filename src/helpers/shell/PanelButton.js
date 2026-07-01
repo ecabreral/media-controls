@@ -3,7 +3,7 @@
 /** @import { SignalMap } from 'resource:///org/gnome/shell/misc/signals.js' */
 /** @import { KeysOf } from '../../types/misc.js' */
 /** @import { PlayerProxyProperties } from '../../types/dbus.js' */
-/** @import { PanelControlIconOptions, MenuControlIconOptions } from '../../types/enums/shell_only.js' */
+/** @import { PanelControlIconOptions, MenuControlIconOptions } from '../../enums/shell_only.js' */
 
 import GObject from "gi://GObject";
 import Clutter from "gi://Clutter";
@@ -19,7 +19,7 @@ import ScrollingLabel from "./ScrollingLabel.js";
 import MenuSlider from "./MenuSlider.js";
 import { debugLog, errorLog } from "../../utils/common.js";
 import { getAppByIdAndEntry, getImage } from "../../utils/shell_only.js";
-import { ControlIconOptions } from "../../types/enums/shell_only.js";
+import { ControlIconOptions } from "../../enums/shell_only.js";
 import {
     LabelTypes,
     PanelElements,
@@ -27,7 +27,7 @@ import {
     LoopStatus,
     PlaybackStatus,
     WidgetFlags,
-} from "../../types/enums/common.js";
+} from "../../enums/common.js";
 
 Gio._promisify(GdkPixbuf.Pixbuf, "new_from_stream_async", "new_from_stream_finish");
 Gio._promisify(Gio.File.prototype, "query_info_async", "query_info_finish");
@@ -105,6 +105,13 @@ class PanelButton extends PanelMenu.Button {
      * @type {InstanceType<typeof MenuSlider>}
      */
     menuSlider;
+
+    /**
+     * @private
+     * @type {number | null}
+     */
+    _menuSliderSignalId;
+
     /**
      * @private
      * @type {St.BoxLayout}
@@ -286,6 +293,10 @@ class PanelButton extends PanelMenu.Button {
             if (this.extension.showTrackSlider) {
                 this.addMenuSlider().catch(errorLog);
             } else if (this.menuSlider != null) {
+                if (this._menuSliderSignalId != null) {
+                    this.menuSlider.disconnect(this._menuSliderSignalId);
+                    this._menuSliderSignalId = null;
+                }
                 this.menuBox.remove_child(this.menuSlider);
                 this.menuSlider.destroy();
                 this.menuSlider = null;
@@ -597,7 +608,7 @@ class PanelButton extends PanelMenu.Button {
         const rate = this.playerProxy.rate;
         if (this.menuSlider == null) {
             this.menuSlider = new MenuSlider();
-            this.menuSlider.connect("seeked", (_, position) => {
+            this._menuSliderSignalId = this.menuSlider.connect("seeked", (_, position) => {
                 this.playerProxy.setPosition(this.playerProxy.metadata["mpris:trackid"], position);
             });
         }
@@ -1176,6 +1187,10 @@ class PanelButton extends PanelMenu.Button {
         this.removeProxyListeners();
         this.playerProxy = null;
         // Null out references to child widgets before parent destroys them
+        if (this.menuSlider != null && this._menuSliderSignalId != null) {
+            this.menuSlider.disconnect(this._menuSliderSignalId);
+        }
+        this._menuSliderSignalId = null;
         this.menuSlider = null;
         this.menuPlayers = null;
         this.menuImage = null;

@@ -5,7 +5,7 @@ import Graphene from "gi://Graphene";
 import Gtk from "gi://Gtk";
 import { gettext as _ } from "resource:///org/gnome/Shell/Extensions/js/extensions/prefs.js";
 
-import { LabelTypes } from "../../types/enums/common.js";
+import { LabelTypes } from "../../enums/common.js";
 
 /** @extends Adw.PreferencesGroup */
 

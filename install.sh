@@ -27,7 +27,7 @@ PACK_ARGS=(
     -o ../builds/
     --schema="../../assets/org.gnome.shell.extensions.mediacontrols.gschema.xml"
     --extra-source=helpers
-    --extra-source=types/enums
+    --extra-source=enums
     --extra-source=org.gnome.shell.extensions.mediacontrols.gresource
     --extra-source=utils
 )

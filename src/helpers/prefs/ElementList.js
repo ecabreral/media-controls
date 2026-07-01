@@ -4,7 +4,7 @@ import Gdk from "gi://Gdk";
 import Graphene from "gi://Graphene";
 import Gtk from "gi://Gtk";
 
-import { PanelElements } from "../../types/enums/common.js";
+import { PanelElements } from "../../enums/common.js";
 
 /**
  * A row in the panel that extends Adw.ActionRow with an extra key.

@@ -1,7 +1,7 @@
-/** @import { PlaybackStatus } from '../../types/enums/common.js' */
+/** @import { PlaybackStatus } from '../../enums/common.js' */
 /** @import { MprisInterface, MprisPlayerInterface, PropertiesInterface, PlayerProxyProperties, MprisPlayerInterfaceMetadata, MprisPlayerInterfaceMetadataUnpacked } from '../../types/dbus.js' */
 /** @import { KeysOf } from '../../types/misc.js' */
-import { MPRIS_PLAYER_IFACE_NAME, MPRIS_OBJECT_PATH, LoopStatus } from "../../types/enums/common.js";
+import { MPRIS_PLAYER_IFACE_NAME, MPRIS_OBJECT_PATH, LoopStatus } from "../../enums/common.js";
 import { errorLog } from "../../utils/common.js";
 import { createDbusProxy } from "../../utils/shell_only.js";
 
