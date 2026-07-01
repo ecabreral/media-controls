@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-EXTENSION_UUID="media-controls-ecabreral"
+EXTENSION_UUID="media-controls@ecabreral.github.com"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "==> Building Media Controls extension..."
@@ -27,7 +27,7 @@ PACK_ARGS=(
     -o ../builds/
     --schema="../../assets/org.gnome.shell.extensions.mediacontrols.gschema.xml"
     --extra-source=helpers
-    --extra-source=types
+    --extra-source=types/enums
     --extra-source=org.gnome.shell.extensions.mediacontrols.gresource
     --extra-source=utils
 )

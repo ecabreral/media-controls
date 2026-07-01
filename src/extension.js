@@ -260,11 +260,18 @@ export default class MediaControls extends Extension {
     mediaSectionAddFunc;
 
     /**
+     * @private
+     * @type {number[]}
+     */
+    _signalIds;
+
+    /**
      * @public
      * @returns {void}
      */
     enable() {
         this.playerProxies = new Map();
+        this._signalIds = [];
         this.initSettings();
         this.initProxies().catch(errorLog);
         this.updateMediaNotificationVisiblity();
@@ -315,6 +322,16 @@ export default class MediaControls extends Extension {
 
     /**
      * @private
+     * @param {string} key
+     * @param {() => void} callback
+     * @returns {void}
+     */
+    _onSettingChanged(key, callback) {
+        this._signalIds.push(this.settings.connect(`changed::${key}`, callback));
+    }
+
+    /**
+     * @private
      * @returns {void}
      */
     initSettings() {
@@ -347,111 +364,112 @@ export default class MediaControls extends Extension {
         this.mouseActionScrollDown = this.settings.get_enum("mouse-action-scroll-down");
         this.cacheArt = this.settings.get_boolean("cache-art");
         this.blacklistedPlayers = this.settings.get_strv("blacklisted-players");
-        this.settings.connect("changed::label-width", () => {
+        this._onSettingChanged("label-width", () => {
             this.labelWidth = this.settings.get_uint("label-width");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL | WidgetFlags.MENU_LABELS | WidgetFlags.MENU_IMAGE);
         });
-        this.settings.connect("changed::fixed-label-width", () => {
+        this._onSettingChanged("fixed-label-width", () => {
             this.isFixedLabelWidth = this.settings.get_boolean("fixed-label-width");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL | WidgetFlags.MENU_LABELS | WidgetFlags.MENU_IMAGE);
         });
-        this.settings.connect("changed::scroll-labels", () => {
+        this._onSettingChanged("scroll-labels", () => {
             this.scrollLabels = this.settings.get_boolean("scroll-labels");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL | WidgetFlags.MENU_LABELS);
         });
-        this.settings.connect("changed::scroll-speed", () => {
+        this._onSettingChanged("scroll-speed", () => {
             this.scrollSpeed = this.settings.get_uint("scroll-speed");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL | WidgetFlags.MENU_LABELS);
         });
-        this.settings.connect("changed::scroll-pause-time", () => {
+        this._onSettingChanged("scroll-pause-time", () => {
             this.scrollPauseTime = this.settings.get_uint("scroll-pause-time") * 1000;
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL | WidgetFlags.MENU_LABELS);
         });
-        this.settings.connect("changed::hide-media-notification", () => {
+        this._onSettingChanged("hide-media-notification", () => {
             this.hideMediaNotification = this.settings.get_boolean("hide-media-notification");
             this.updateMediaNotificationVisiblity();
         });
-        this.settings.connect("changed::show-track-slider", () => {
+        this._onSettingChanged("show-track-slider", () => {
             this.showTrackSlider = this.settings.get_boolean("show-track-slider");
             this.panelBtn?.updateWidgets(WidgetFlags.MENU_SLIDER);
         });
-        this.settings.connect("changed::show-label", () => {
+        this._onSettingChanged("show-label", () => {
             this.showLabel = this.settings.get_boolean("show-label");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL);
         });
-        this.settings.connect("changed::show-player-icon", () => {
+        this._onSettingChanged("show-player-icon", () => {
             this.showPlayerIcon = this.settings.get_boolean("show-player-icon");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_ICON);
         });
-        this.settings.connect("changed::show-control-icons", () => {
+        this._onSettingChanged("show-control-icons", () => {
             this.showControlIcons = this.settings.get_boolean("show-control-icons");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_CONTROLS);
         });
-        this.settings.connect("changed::show-control-icons-play", () => {
+        this._onSettingChanged("show-control-icons-play", () => {
             this.showControlIconsPlay = this.settings.get_boolean("show-control-icons-play");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_CONTROLS_PLAYPAUSE);
         });
-        this.settings.connect("changed::show-control-icons-next", () => {
+        this._onSettingChanged("show-control-icons-next", () => {
             this.showControlIconsNext = this.settings.get_boolean("show-control-icons-next");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_CONTROLS_NEXT);
         });
-        this.settings.connect("changed::show-control-icons-previous", () => {
+        this._onSettingChanged("show-control-icons-previous", () => {
             this.showControlIconsPrevious = this.settings.get_boolean("show-control-icons-previous");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_CONTROLS_PREVIOUS);
         });
-        this.settings.connect("changed::show-control-icons-seek-forward", () => {
+        this._onSettingChanged("show-control-icons-seek-forward", () => {
             this.showControlIconsSeekForward = this.settings.get_boolean("show-control-icons-seek-forward");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_CONTROLS_SEEK_FORWARD);
         });
-        this.settings.connect("changed::show-control-icons-seek-backward", () => {
+        this._onSettingChanged("show-control-icons-seek-backward", () => {
             this.showControlIconsSeekBackward = this.settings.get_boolean("show-control-icons-seek-backward");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_CONTROLS_SEEK_BACKWARD);
         });
-        this.settings.connect("changed::colored-player-icon", () => {
+        this._onSettingChanged("colored-player-icon", () => {
             this.coloredPlayerIcon = this.settings.get_boolean("colored-player-icon");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_ICON);
         });
-        this.settings.connect("changed::extension-position", () => {
+        this._onSettingChanged("extension-position", () => {
             const enumIndex = this.settings.get_enum("extension-position");
             this.extensionPosition = enumValueByIndex(ExtensionPositions, enumIndex);
             this.removePanelButton();
             this.setActivePlayer();
         });
-        this.settings.connect("changed::extension-index", () => {
+        this._onSettingChanged("extension-index", () => {
             this.extensionIndex = this.settings.get_uint("extension-index");
             this.removePanelButton();
             this.setActivePlayer();
         });
-        this.settings.connect("changed::elements-order", () => {
+        this._onSettingChanged("elements-order", () => {
             this.elementsOrder = /** @type {ElementsOrder} */ (this.settings.get_strv("elements-order"));
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_NO_REPLACE);
         });
-        this.settings.connect("changed::labels-order", () => {
+        this._onSettingChanged("labels-order", () => {
             this.labelsOrder = this.settings.get_strv("labels-order");
             this.panelBtn?.updateWidgets(WidgetFlags.PANEL_LABEL);
         });
-        this.settings.connect("changed::mouse-action-left", () => {
+        this._onSettingChanged("mouse-action-left", () => {
             this.mouseActionLeft = this.settings.get_enum("mouse-action-left");
         });
-        this.settings.connect("changed::mouse-action-middle", () => {
+        this._onSettingChanged("mouse-action-middle", () => {
             this.mouseActionMiddle = this.settings.get_enum("mouse-action-middle");
         });
-        this.settings.connect("changed::mouse-action-right", () => {
+        this._onSettingChanged("mouse-action-right", () => {
             this.mouseActionRight = this.settings.get_enum("mouse-action-right");
         });
-        this.settings.connect("changed::mouse-action-double", () => {
+        this._onSettingChanged("mouse-action-double", () => {
             this.mouseActionDouble = this.settings.get_enum("mouse-action-double");
         });
-        this.settings.connect("changed::mouse-action-scroll-up", () => {
+        this._onSettingChanged("mouse-action-scroll-up", () => {
             this.mouseActionScrollUp = this.settings.get_enum("mouse-action-scroll-up");
         });
-        this.settings.connect("changed::mouse-action-scroll-down", () => {
+        this._onSettingChanged("mouse-action-scroll-down", () => {
             this.mouseActionScrollDown = this.settings.get_enum("mouse-action-scroll-down");
         });
-        this.settings.connect("changed::cache-art", () => {
+        this._onSettingChanged("cache-art", () => {
             this.cacheArt = this.settings.get_boolean("cache-art");
+
         });
-        this.settings.connect("changed::blacklisted-players", () => {
+        this._onSettingChanged("blacklisted-players", () => {
             this.blacklistedPlayers = this.settings.get_strv("blacklisted-players");
             for (const playerProxy of this.playerProxies.values()) {
                 if (this.isPlayerBlacklisted(playerProxy.identity, playerProxy.desktopEntry)) {
@@ -756,6 +774,10 @@ export default class MediaControls extends Extension {
      * @returns {void}
      */
     destroySettings() {
+        this._signalIds?.forEach((id) => {
+            this.settings?.disconnect(id);
+        });
+        this._signalIds = null;
         this.settings = null;
         this.labelWidth = null;
         this.hideMediaNotification = null;

@@ -1,10 +1,10 @@
 {
-  "uuid": "media-controls-ecabreral",
+  "uuid": "media-controls@ecabreral.github.com",
   "name": "Media Controls",
   "description": "Show controls and information of the currently playing media in the panel.",
   "url": "https://github.com/ecabreral/media-controls",
   "settings-schema": "org.gnome.shell.extensions.mediacontrols",
-  "gettext-domain": "media-controls-ecabreral",
+  "gettext-domain": "media-controls@ecabreral.github.com",
   "version-name": "2.4.6",
-  "shell-version": ["46", "47", "48", "49", "50"]
+  "shell-version": ["50"]
 }

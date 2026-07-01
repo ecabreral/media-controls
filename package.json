@@ -8,19 +8,19 @@
     "build:dirs": "mkdir -p dist/temp dist/builds",
     "build:copy": "cp -r src/* dist/temp/",
     "build:resources": "glib-compile-resources assets/org.gnome.shell.extensions.mediacontrols.gresource.xml --target=dist/temp/org.gnome.shell.extensions.mediacontrols.gresource --sourcedir=assets",
-    "build:pack": "cd dist/temp && gnome-extensions pack -f -o ../builds/ --schema='../../assets/org.gnome.shell.extensions.mediacontrols.gschema.xml' --podir='../../assets/locale' --extra-source=helpers --extra-source=types --extra-source=org.gnome.shell.extensions.mediacontrols.gresource --extra-source=utils .",
+    "build:pack": "cd dist/temp && gnome-extensions pack -f -o ../builds/ --schema='../../assets/org.gnome.shell.extensions.mediacontrols.gschema.xml' --podir='../../assets/locale' --extra-source=helpers --extra-source=types/enums --extra-source=org.gnome.shell.extensions.mediacontrols.gresource --extra-source=utils .",
 
     "build": "pnpm run build:clean && pnpm run build:dirs && pnpm run build:copy && pnpm run build:resources && pnpm run build:pack",
 
-    "ext:install": "gnome-extensions install --force dist/builds/media-controls-ecabreral.shell-extension.zip",
-    "ext:uninstall": "gnome-extensions uninstall media-controls-ecabreral",
-    "ext:enable": "gnome-extensions enable media-controls-ecabreral",
-    "ext:disable": "gnome-extensions disable media-controls-ecabreral",
-    "ext:prefs": "gnome-extensions prefs media-controls-ecabreral",
-    "ext:upload": "gnome-extensions upload --accept-tos --user ecabreral ${EGO_ARGS} dist/builds/media-controls-ecabreral.shell-extension.zip",
+    "ext:install": "gnome-extensions install --force \"dist/builds/${npm_package_name:-media-controls@ecabreral.github.com}.shell-extension.zip\"",
+    "ext:uninstall": "gnome-extensions uninstall media-controls@ecabreral.github.com",
+    "ext:enable": "gnome-extensions enable media-controls@ecabreral.github.com",
+    "ext:disable": "gnome-extensions disable media-controls@ecabreral.github.com",
+    "ext:prefs": "gnome-extensions prefs media-controls@ecabreral.github.com",
+    "ext:upload": "gnome-extensions upload --accept-tos --user ecabreral ${EGO_ARGS} \"dist/builds/media-controls@ecabreral.github.com.shell-extension.zip\"",
 
-    "translations:extract": "xgettext --from-code=UTF-8 --add-comments --join-existing --keyword=_ --keyword=C_:1c,2 --language=Javascript --output=assets/locale/media-controls-ecabreral.pot $(find . -type f \\( -name '*.ui' -o -name '*.js' \\) -not -path './node_modules/*')",
-    "translations:merge": "for po in assets/locale/*.po; do msgmerge -U \"$po\" assets/locale/media-controls-ecabreral.pot; done && rm -f assets/locale/*.po~",
+    "translations:extract": "xgettext --from-code=UTF-8 --add-comments --join-existing --keyword=_ --keyword=C_:1c,2 --language=Javascript --output=assets/locale/media-controls@ecabreral.github.com.pot $(find . -type f \\( -name '*.ui' -o -name '*.js' \\) -not -path './node_modules/*')",
+    "translations:merge": "for po in assets/locale/*.po; do msgmerge -U \"$po\" assets/locale/media-controls@ecabreral.github.com.pot; done && rm -f assets/locale/*.po~",
     "translations": "pnpm run translations:extract && pnpm run translations:merge"
   },
   "devDependencies": {
