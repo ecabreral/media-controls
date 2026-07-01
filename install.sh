@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-EXTENSION_UUID="mediacontrols@cliffniff.github.com"
+EXTENSION_UUID="mediacontrols@ecabreral"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "==> Building Media Controls extension..."
